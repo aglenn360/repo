@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: config.openshift.io/v1
+  kind: OAuth
+  metadata:
+    annotations:
+      release.openshift.io/create-only: 'true'
+    name: cluster
+  spec:
+    identityProviders:
+      - mappingMethod: claim
+        name: openid
+        openID:
+          claims:
+            email:
+              - email
+            name:
+              - name
+            preferredUsername:
+              - preferred_username
+          clientID: 832d6a4b-fbe9-4226-a116-f4785c1a7ce5
+          clientSecret:
+            name: openid-client-secret
+          extraScopes: []
+          issuer: >-
+            https://login.microsoftonline.com/9790d248-bb84-4526-a696-7cc3bb3b4ea8/v2.0
+        type: OpenID
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: openid-client-secret
+    namespace: openshift-config
+  data:
+    clientSecret: Mzc3YzExMDUtOTJkNS00YmFhLWFiY2ItMzk0MTQ1NmE1MWZi
+  type: Opaque

@@ -1,0 +1,1 @@
+{"clusterName":"ipi-cluster","clusterID":"c9ba4929-7ee8-4eb5-85f8-c967d139b66f","infraID":"ipi-cluster-f9z8z","aws":{"region":"eu-west-2","identifier":[{"kubernetes.io/cluster/ipi-cluster-f9z8z":"owned"},{"openshiftClusterID":"c9ba4929-7ee8-4eb5-85f8-c967d139b66f"}]}}
