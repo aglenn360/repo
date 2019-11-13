@@ -1,0 +1,1 @@
+{"clusterName":"ocp-dev-1","clusterID":"91a3f032-9bce-42cb-bd2e-f31e20a0ceeb","infraID":"ocp-dev-1-hvdvh","aws":{"region":"eu-west-2","identifier":[{"kubernetes.io/cluster/ocp-dev-1-hvdvh":"owned"},{"openshiftClusterID":"91a3f032-9bce-42cb-bd2e-f31e20a0ceeb"}]}}

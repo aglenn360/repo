@@ -14,15 +14,23 @@ items:
         openID:
           claims:
             email:
+              - custom_email_claim
               - email
             name:
+              - nickname
+              - given_name
               - name
             preferredUsername:
               - preferred_username
-          clientID: 832d6a4b-fbe9-4226-a116-f4785c1a7ce5
+              - email
+          clientID: 9c13d480-01a3-4373-908d-ec20300cf07e
           clientSecret:
             name: openid-client-secret
-          extraScopes: []
+          extraAuthorizeParameters:
+            include_granted_scopes:  "true"
+          extraScopes: 
+          - email
+          -  profile
           issuer: >-
             https://login.microsoftonline.com/9790d248-bb84-4526-a696-7cc3bb3b4ea8/v2.0
         type: OpenID
@@ -34,3 +42,34 @@ items:
   data:
     clientSecret: Mzc3YzExMDUtOTJkNS00YmFhLWFiY2ItMzk0MTQ1NmE1MWZi
   type: Opaque
+
+
+
+
+
+    - mappingMethod: claim
+      name: AzureAD
+      openID:
+        claims:
+          email:
+            - custom_email_claim
+            - email
+          name:
+            - nickname
+            - given_name
+            - name
+            - email
+          preferredUsername:
+            - preferred_username
+            - email
+        clientID: 832d6a4b-fbe9-4226-a116-f4785c1a7ce5
+        clientSecret:
+          name: openid-client-secret
+        extraAuthorizeParameters:
+          include_granted_scopes: 'true'
+        extraScopes:
+          - email
+          - profile
+        issuer: >-
+          https://login.microsoftonline.com/9790d248-bb84-4526-a696-7cc3bb3b4ea8/v2.0
+      type: OpenID
