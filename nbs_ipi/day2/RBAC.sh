@@ -2,7 +2,7 @@
 
 
 
-#oc adm policy remove-cluster-role-from-group basic-user system:authenticate
+oc adm policy remove-cluster-role-from-group basic-user system:authenticate
 
 
 OCP_GROUPS="$(oc get groups | awk 'NR>1' | awk '{ print $1 }' )"
