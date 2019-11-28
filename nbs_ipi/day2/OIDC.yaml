@@ -4,72 +4,50 @@ items:
 - apiVersion: config.openshift.io/v1
   kind: OAuth
   metadata:
-    annotations:
-      release.openshift.io/create-only: 'true'
     name: cluster
   spec:
     identityProviders:
       - mappingMethod: claim
-        name: openid
+        name: AzureAD
         openID:
           claims:
             email:
-              - custom_email_claim
-              - email
+            - custom_email_claim
+            - email
             name:
-              - nickname
-              - given_name
-              - name
+            - name
             preferredUsername:
-              - preferred_username
-              - email
-          clientID: 9c13d480-01a3-4373-908d-ec20300cf07e
+            - email
+            - preferred_username
+          clientID: bd4e1cf1-8f75-4eec-bb40-fe95d554ee8c
           clientSecret:
             name: openid-client-secret
           extraAuthorizeParameters:
-            include_granted_scopes:  "true"
-          extraScopes: 
-          - email
-          -  profile
+            include_granted_scopes: 'true'
+          extraScopes:
+            - email
+            - profile
           issuer: >-
-            https://login.microsoftonline.com/9790d248-bb84-4526-a696-7cc3bb3b4ea8/v2.0
+            https://login.microsoftonline.com/de84e170-138e-495c-aa45-01a8c241aa52/v2.0
         type: OpenID
+      - name: ClusterAccount 
+        mappingMethod: claim 
+        type: HTPasswd
+        htpasswd:
+          fileData:
+            name: openid-htpasswd
 - kind: Secret
   apiVersion: v1
   metadata:
     name: openid-client-secret
     namespace: openshift-config
   data:
-    clientSecret: Mzc3YzExMDUtOTJkNS00YmFhLWFiY2ItMzk0MTQ1NmE1MWZi
+    clientSecret: ZTdmNkJwTVpyMUNBcHhWcllIWjI0bXd0ZmRlRzlkCg==
   type: Opaque
-
-
-
-
-
-    - mappingMethod: claim
-      name: AzureAD
-      openID:
-        claims:
-          email:
-            - custom_email_claim
-            - email
-          name:
-            - nickname
-            - given_name
-            - name
-            - email
-          preferredUsername:
-            - preferred_username
-            - email
-        clientID: 832d6a4b-fbe9-4226-a116-f4785c1a7ce5
-        clientSecret:
-          name: openid-client-secret
-        extraAuthorizeParameters:
-          include_granted_scopes: 'true'
-        extraScopes:
-          - email
-          - profile
-        issuer: >-
-          https://login.microsoftonline.com/9790d248-bb84-4526-a696-7cc3bb3b4ea8/v2.0
-      type: OpenID
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: openid-htpasswd
+    namespace: openshift-config
+  data:
+    htpasswd: b3BzaGFkbTokMnkkMDUkNkxILks3REZvWUJ1cndoOUszQmNYT0NtTzZqNWVDSU42U2tYNkZOejBQNGEueTY3TzZIbmUK

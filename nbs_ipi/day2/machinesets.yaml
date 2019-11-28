@@ -1,0 +1,65 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  generation: 1
+  labels:
+    machine.openshift.io/cluster-api-cluster: cluster72-t8vwx
+    machine.openshift.io/cluster-api-machine-role: worker
+    machine.openshift.io/cluster-api-machine-type: worker
+  name: cluster72-t8vwx-infra-uksouth3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: cluster72-t8vwx
+      machine.openshift.io/cluster-api-machineset: cluster72-t8vwx-infra-uksouth3
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        machine.openshift.io/cluster-api-cluster: cluster72-t8vwx
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: cluster72-t8vwx-infra-uksouth3
+    spec:
+      metadata:
+        labels:
+          node-role.kubernetes.io/infra: ""
+          infra: infra         
+        creationTimestamp: null
+      providerSpec:
+        value:
+          apiVersion: azureproviderconfig.openshift.io/v1beta1
+          credentialsSecret:
+            name: azure-cloud-credentials
+            namespace: openshift-machine-api
+          image:
+            offer: ""
+            publisher: ""
+            resourceID: /resourceGroups/cluster72-t8vwx-rg/providers/Microsoft.Compute/images/cluster72-t8vwx
+            sku: ""
+            version: ""
+          internalLoadBalancer: ""
+          kind: AzureMachineProviderSpec
+          location: uksouth
+          managedIdentity: cluster72-t8vwx-identity
+          metadata:
+            creationTimestamp: null
+          natRule: null
+          networkResourceGroup: ""
+          osDisk:
+            diskSizeGB: 128
+            managedDisk:
+              storageAccountType: Premium_LRS
+            osType: Linux
+          publicIP: false
+          publicLoadBalancer: ""
+          resourceGroup: cluster72-t8vwx-rg
+          sshPrivateKey: ""
+          sshPublicKey: ""
+          subnet: cluster72-t8vwx-worker-subnet
+          userDataSecret:
+            name: worker-user-data
+          vmSize: Standard_D2s_v3
+          vnet: cluster72-t8vwx-vnet
+          zone: "3"
