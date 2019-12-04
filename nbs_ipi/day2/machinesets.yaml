@@ -6,7 +6,73 @@ metadata:
     machine.openshift.io/cluster-api-cluster: cluster72-t8vwx
     machine.openshift.io/cluster-api-machine-role: worker
     machine.openshift.io/cluster-api-machine-type: worker
-  name: cluster72-t8vwx-infra-uksouth3
+  name: cluster72-t8vwx-infra1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: cluster72-t8vwx
+      machine.openshift.io/cluster-api-machineset: cluster72-t8vwx-infra1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        machine.openshift.io/cluster-api-cluster: cluster72-t8vwx
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: cluster72-t8vwx-infra1
+    spec:
+      metadata:
+        labels:
+          node-role.kubernetes.io/infra: ""
+          infra: infra         
+        creationTimestamp: null
+      providerSpec:
+        value:
+          apiVersion: azureproviderconfig.openshift.io/v1beta1
+          credentialsSecret:
+            name: azure-cloud-credentials
+            namespace: openshift-machine-api
+          image:
+            offer: ""
+            publisher: ""
+            resourceID: /resourceGroups/cluster72-t8vwx-rg/providers/Microsoft.Compute/images/cluster72-t8vwx
+            sku: ""
+            version: ""
+          internalLoadBalancer: ""
+          kind: AzureMachineProviderSpec
+          location: uksouth
+          managedIdentity: cluster72-t8vwx-identity
+          metadata:
+            creationTimestamp: null
+          natRule: null
+          networkResourceGroup: ""
+          osDisk:
+            diskSizeGB: 128
+            managedDisk:
+              storageAccountType: Premium_LRS
+            osType: Linux
+          publicIP: false
+          publicLoadBalancer: ""
+          resourceGroup: cluster72-t8vwx-rg
+          sshPrivateKey: ""
+          sshPublicKey: ""
+          subnet: cluster72-t8vwx-worker-subnet
+          userDataSecret:
+            name: worker-user-data
+          vmSize: Standard_D2s_v3
+          vnet: cluster72-t8vwx-vnet
+          zone: "1"
+
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  generation: 1
+  labels:
+    machine.openshift.io/cluster-api-cluster: cluster72-t8vwx CLUSTER_NAME
+    machine.openshift.io/cluster-api-machine-role: worker
+    machine.openshift.io/cluster-api-machine-type: worker
+  name: cluster72-t8vwx-infra-uksouth1
 spec:
   replicas: 1
   selector:
@@ -63,3 +129,85 @@ spec:
           vmSize: Standard_D2s_v3
           vnet: cluster72-t8vwx-vnet
           zone: "3"
+
+
+          oc patch ingresscontroller default -n openshift-ingress-operator --type=merge --patch='{"spec":{"nodePlacement":{"nodeSelector": {"matchLabels":{"node-role.kubernetes.io/infra":""}}}}}'
+
+          oc patch configs.imageregistry.operator.openshift.io/cluster -n openshift-image-registry --type=merge --patch '{"spec":{"nodeSelector":{"node-role.kubernetes.io/infra":""}}}'
+
+
+
+          cat <<EOF > $HOME/monitoring-cm.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |+
+    alertmanagerMain:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    prometheusK8s:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    prometheusOperator:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    grafana:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    k8sPrometheusAdapter:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    kubeStateMetrics:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    telemeterClient:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+EOF
+
+oc create -f $HOME/monitoring-cm.yaml -n openshift-monitoring
+
+echo '
+---
+apiVersion: "autoscaling.openshift.io/v1alpha1"
+kind: "ClusterAutoscaler"
+metadata:
+  name: "default"
+spec:
+  podPriorityThreshold: -10
+  resourceLimits:
+    maxNodesTotal: 12
+  scaleDown:
+    enabled: true
+    delayAfterAdd: 10s
+    delayAfterDelete: 10s
+    delayAfterFailure: 10s' | oc create -f - -n openshift-machine-api
+
+
+
+    echo '
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: work-queue-
+spec:
+  template:
+    spec:
+      containers:
+      - name: work
+        image: busybox
+        command: ["sleep",  "300"]
+        resources:
+          requests:
+            memory: 500Mi
+            cpu: 500m
+      restartPolicy: Never
+      nodeSelector:
+        ssd: "true"
+  backoffLimit: 4
+  completions: 50
+  parallelism: 50' | oc create -f - -n work-queue
