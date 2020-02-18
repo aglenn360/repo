@@ -1,0 +1,138 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  generation: 1
+  labels:
+    machine.openshift.io/cluster-api-cluster: test-ag-248mg
+  name: test-ag-248mg-alex-eu-west-2b
+  namespace: openshift-machine-api
+  resourceVersion: "10981"
+  selfLink: /apis/machine.openshift.io/v1beta1/namespaces/openshift-machine-api/machinesets/test-ag-248mg-alex-eu-west-2b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: test-ag-248mg
+      machine.openshift.io/cluster-api-machineset: test-ag-248mg-alex-eu-west-2b
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        machine.openshift.io/cluster-api-cluster: test-ag-248mg
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: test-ag-248mg-alex-eu-west-2b
+    spec:
+      metadata:
+        labels:
+          node-role.kubernetes.io/infra: ""
+          infra: infra       
+      providerSpec:
+        value:
+          ami:
+            id: ami-00c74e593125e0096
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+          - ebs:
+              iops: 0
+              volumeSize: 120
+              volumeType: gp2
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: test-ag-248mg-worker-profile
+          instanceType: t3.large
+          kind: AWSMachineProviderConfig
+          metadata:
+            creationTimestamp: null
+          placement:
+            availabilityZone: eu-west-2b
+            region: eu-west-2
+          publicIp: null
+          securityGroups:
+          - filters:
+            - name: tag:Name
+              values:
+              - test-ag-248mg-worker-sg
+          subnet:
+            filters:
+            - name: tag:Name
+              values:
+              - test-ag-248mg-private-eu-west-2b
+          tags:
+          - name: kubernetes.io/cluster/test-ag-248mg
+            value: owned
+          userDataSecret:
+            name: worker-user-data
+
+---
+
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  generation: 1
+  labels:
+    machine.openshift.io/cluster-api-cluster: test-ag-248mg
+  name: test-ag-248mg-alex-eu-west-2c
+  namespace: openshift-machine-api
+  resourceVersion: "10981"
+  selfLink: /apis/machine.openshift.io/v1beta1/namespaces/openshift-machine-api/machinesets/test-ag-248mg-alex-eu-west-2c
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: test-ag-248mg
+      machine.openshift.io/cluster-api-machineset: test-ag-248mg-alex-eu-west-2c
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        machine.openshift.io/cluster-api-cluster: test-ag-248mg
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: test-ag-248mg-alex-eu-west-2c
+    spec:
+      metadata:
+        labels:
+          node-role.kubernetes.io/infra: ""
+          infra: infra       
+      providerSpec:
+        value:
+          ami:
+            id: ami-00c74e593125e0096
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+          - ebs:
+              iops: 0
+              volumeSize: 120
+              volumeType: gp2
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: test-ag-248mg-worker-profile
+          instanceType: t3.large
+          kind: AWSMachineProviderConfig
+          metadata:
+            creationTimestamp: null
+          placement:
+            availabilityZone: eu-west-2c
+            region: eu-west-2
+          publicIp: null
+          securityGroups:
+          - filters:
+            - name: tag:Name
+              values:
+              - test-ag-248mg-worker-sg
+          subnet:
+            filters:
+            - name: tag:Name
+              values:
+              - test-ag-248mg-private-eu-west-2c
+          tags:
+          - name: kubernetes.io/cluster/test-ag-248mg
+            value: owned
+          userDataSecret:
+            name: worker-user-data
+

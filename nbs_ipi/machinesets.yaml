@@ -1,0 +1,65 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  generation: 1
+  labels:
+    machine.openshift.io/cluster-api-cluster: test-ag-hsj7b
+    machine.openshift.io/cluster-api-machine-role: worker
+    machine.openshift.io/cluster-api-machine-type: worker
+  name: test-ag-hsj7b-infra-REGION1
+spec:
+  replicas: 1    
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: test-ag-hsj7b
+      machine.openshift.io/cluster-api-machineset: test-ag-hsj7b-infra-REGION1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        machine.openshift.io/cluster-api-cluster: test-ag-hsj7b
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: test-ag-hsj7b-infra-REGION1
+    spec:
+      metadata:
+        labels:
+          node-role.kubernetes.io/infra: ""
+          infra: infra         
+        creationTimestamp: null
+      providerSpec:
+        value:
+          apiVersion: azureproviderconfig.openshift.io/v1beta1
+          credentialsSecret:
+            name: azure-cloud-credentials
+            namespace: openshift-machine-api
+          image:
+            offer: ""
+            publisher: ""
+            resourceID: /resourceGroups/test-ag-hsj7b-rg/providers/Microsoft.Compute/images/test-ag-hsj7b
+            sku: ""
+            version: ""
+          internalLoadBalancer: ""
+          kind: AzureMachineProviderSpec
+          location: REGION
+          managedIdentity: test-ag-hsj7b-identity
+          metadata:
+            creationTimestamp: null
+          natRule: null
+          networkResourceGroup: ""
+          osDisk:
+            diskSizeGB: 128
+            managedDisk:
+              storageAccountType: Premium_LRS
+            osType: Linux
+          publicIP: false
+          publicLoadBalancer: ""
+          resourceGroup: test-ag-hsj7b-rg
+          sshPrivateKey: ""
+          sshPublicKey: ""
+          subnet: test-ag-hsj7b-worker-subnet
+          userDataSecret:
+            name: worker-user-data
+          vmSize: Standard_D2s_v3
+          vnet: test-ag-hsj7b-vnet
+          zone: "1"

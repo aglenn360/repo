@@ -5,8 +5,8 @@ compute:
   name: worker
   platform: 
     aws:
-      type: t3.medium
-  replicas: 2
+      type: m4.xlarge
+  replicas: 3
 controlPlane:
   hyperthreading: Enabled
   name: master
